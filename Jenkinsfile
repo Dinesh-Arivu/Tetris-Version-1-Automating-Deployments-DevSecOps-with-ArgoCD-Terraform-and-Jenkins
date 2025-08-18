@@ -7,7 +7,7 @@ pipeline{
     environment {
         SCANNER_HOME=tool 'sonar-scanner'
         GIT_REPO_NAME = "Tetris-manifest-file-Automating-Deployments-DevSecOps-with-ArgoCD-Terraform-and-Jenkins.git"
-        GIT_USER_NAME = "Dinesh-Arivu"      # change your Github Username here
+        GIT_USER_NAME = "Dinesh-Arivu"     
     }
     stages {
         stage('clean workspace'){
