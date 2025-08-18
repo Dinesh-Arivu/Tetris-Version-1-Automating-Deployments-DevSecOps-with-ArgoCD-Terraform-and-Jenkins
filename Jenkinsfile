@@ -6,6 +6,8 @@ pipeline{
     }
     environment {
         SCANNER_HOME=tool 'sonar-scanner'
+        GIT_REPO_NAME = "Tetris-manifest-file-Automating-Deployments-DevSecOps-with-ArgoCD-Terraform-and-Jenkins.git"
+        GIT_USER_NAME = "Dinesh-Arivu"      # change your Github Username here
     }
     stages {
         stage('clean workspace'){
@@ -60,9 +62,27 @@ pipeline{
                 }
             }
         }
-        stage("TRIVY Image Scan"){
+        stage("TRIVY"){
             steps{
                 sh "trivy image dinesh1097/tetrisv1:latest > trivyimage.txt"
+            }
+        }
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Dinesh-Arivu/Tetris-manifest-file-Automating-Deployments-DevSecOps-with-ArgoCD-Terraform-and-Jenkins.git'
+            }
+        }
+        stage('Update Deployment File') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                       NEW_IMAGE_NAME = "dinesh1097/tetrisv1:latest"   #update your image here
+                       sh "sed -i 's|image: .*|image: $NEW_IMAGE_NAME|' deployment.yml"
+                       sh 'git add deployment.yml'
+                       sh "git commit -m 'Update deployment image to $NEW_IMAGE_NAME'"
+                       sh "git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main"
+                    }
+                }
             }
         }
     }
