@@ -62,7 +62,7 @@ pipeline{
                 }
             }
         }
-        stage("TRIVY"){
+        stage("TRIVY Image Scan"){
             steps{
                 sh "trivy image dinesh1097/tetrisv1:latest > trivyimage.txt"
             }
